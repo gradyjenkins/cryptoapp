@@ -7,15 +7,42 @@
 //
 
 import UIKit
+import SwiftChart
 
-class CoinViewController: UIViewController {
-
+class CoinViewController: UIViewController, ChartDelegate {
     let coin: Coin
+    let queryService = QueryService()
+    var data: [CoinData]?
     
     init(_ coin: Coin) {
         self.coin = coin
         super.init(nibName: nil, bundle: nil)
+        queryService.getTicker("https://min-api.cryptocompare.com/data/histoday?fsym="+coin.symbol+"&tsym=USD&limit=60&aggregate=3&e=CCCAGG") { (results, error) in
+            if let result = results {
+                self.data = result
+                self.SetUpChart()
+            }
+        }
         setupView()
+    }
+    
+    private func SetUpChart(){
+        var values = [Float]()
+        var dates = [String]()
+        let dateFormatter = DateFormatter()
+        
+        dateFormatter.dateFormat = "MMM yy"
+        if let data = self.data {
+            for item in data {
+                values.append(Float(item.high))
+                let date = Date(timeIntervalSince1970: item.time)
+                dates.append(dateFormatter.string(from: date))
+            }
+        }
+        let series = ChartSeries(values)
+        series.color = ChartColors.darkRedColor()
+        series.area = true
+        self.chart.add(series)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -24,12 +51,12 @@ class CoinViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.white
-        self.view.addSubview(nameLabel)
+        view.backgroundColor = UIColor.black
+        //self.view.addSubview(nameLabel)
         self.view.addSubview(rankLabel)
         self.view.addSubview(priceLabel)
+        self.view.addSubview(chart)
         self.view.addSubview(containerView)
-        //nameLabel.text = coin.name
         rankLabel.text = "Rank "+coin.rank
         priceLabel.text = "$"+coin.priceUSD
         self.title = coin.name
@@ -50,19 +77,22 @@ class CoinViewController: UIViewController {
     
     let rankLabel: UILabel = {
         let label = UILabel()
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     let priceLabel: UILabel = {
         let label = UILabel()
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    let containerView: UIStackView = {
-        let view = UIStackView()
+    let containerView: UIView = {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .cyan
         return view
     }()
     
@@ -84,21 +114,33 @@ class CoinViewController: UIViewController {
         return label
     }()
     
-    func setupView() {
-        let guide = view.safeAreaLayoutGuide
-//        nameLabel.topAnchor.constraint(equalTo: guide.topAnchor, constant: 120).isActive = true
-//        nameLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 50).isActive = true
-        rankLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10).isActive = true
-        rankLabel.topAnchor.constraint(equalTo: guide.topAnchor, constant: 10).isActive = true
-        priceLabel.topAnchor.constraint(equalTo: nameLabel.topAnchor, constant: 40).isActive = true
-        priceLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 70).isActive = true
-        containerView.topAnchor.constraint(equalTo: priceLabel.topAnchor, constant: 50).isActive = true
-        containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        containerView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        containerView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+    let chart: Chart = {
+        let chart = Chart(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+        chart.translatesAutoresizingMaskIntoConstraints = false
+        return chart
+    }()
+    
+    func didTouchChart(_ chart: Chart, indexes: Array<Int?>, x: Float, left: CGFloat) {
+        
     }
     
-    private func loadChartData(){
+    func didFinishTouchingChart(_ chart: Chart) {
         
+    }
+    
+    func setupView() {
+        let guide = view.safeAreaLayoutGuide
+        rankLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10).isActive = true
+        rankLabel.topAnchor.constraint(equalTo: guide.topAnchor, constant: 10).isActive = true
+        priceLabel.topAnchor.constraint(equalTo: guide.topAnchor, constant: 40).isActive = true
+        priceLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 70).isActive = true
+        chart.topAnchor.constraint(equalTo: guide.topAnchor, constant: 80).isActive = true
+        chart.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 10).isActive = true
+        chart.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -10).isActive = true
+        chart.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        containerView.topAnchor.constraint(equalTo: chart.bottomAnchor, constant: 50).isActive = true
+        containerView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 10).isActive = true
+        containerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -10).isActive = true
+        containerView.heightAnchor.constraint(equalToConstant: 200).isActive = true
     }
 }
