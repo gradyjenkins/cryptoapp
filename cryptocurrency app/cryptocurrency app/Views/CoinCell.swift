@@ -21,11 +21,12 @@ class CoinCell: UITableViewCell {
     
     var coin: Coin? {
         didSet {
-            nameLabel.text = coin?.name
-            priceUsdLabel.text = coin?.priceUSD
-            symbolLabel.text = coin?.symbol
-            percentChange1hLabel.text = coin?.percentChange_1h 
-            percentChange24hLabel.text = coin?.percentChange_24h
+            guard let symbol = coin?.symbol, let name = coin?.name, let priceUSD = coin?.priceUSD else {
+                return
+            }
+            nameLabel.text = name
+            priceUsdLabel.text = priceUSD
+            symbolLabel.text = symbol
         }
     }
     
@@ -54,41 +55,54 @@ class CoinCell: UITableViewCell {
         return label
     }()
     
-    let percentChange1hLabel: UILabel = {
+    let currencySymbol: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "$"
+        label.translatesAutoresizingMaskIntoConstraints = true
         return label
     }()
     
-    let percentChange24hLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    let coinImage: UIImageView = {
+        let image = UIImageView()
+        
+        image.translatesAutoresizingMaskIntoConstraints = true
+        return image
     }()
     
     func setupView() {
-        
         addSubview(symbolLabel)
-        symbolLabel.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        symbolLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 70).isActive = true
-        symbolLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
         addSubview(nameAndSymbolSeparator)
+        addSubview(nameLabel)
+        addSubview(priceUsdLabel)
+        addSubview(coinImage)
+        
+        coinImage.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        coinImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        coinImage.image = UIImage(named: self.coin!.symbol)
+        
+        symbolLabel.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        symbolLabel.leadingAnchor.constraint(equalTo: coinImage.trailingAnchor, constant: 70).isActive = true
+        symbolLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
         nameAndSymbolSeparator.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         nameAndSymbolSeparator.leadingAnchor.constraint(equalTo: symbolLabel.trailingAnchor, constant: 5).isActive = true
         nameAndSymbolSeparator.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        addSubview(nameLabel)
+        
         nameLabel.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: nameAndSymbolSeparator.trailingAnchor, constant: 5).isActive = true
         nameLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        addSubview(priceUsdLabel)
+        
         priceUsdLabel.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         priceUsdLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         priceUsdLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        addSubview(percentChange1hLabel)
-        percentChange1hLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        percentChange1hLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 100).isActive = true
-        addSubview(percentChange24hLabel)
-        percentChange24hLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        percentChange24hLabel.leadingAnchor.constraint(equalTo: percentChange1hLabel.trailingAnchor, constant: 50).isActive = true
     }
+    
+//    func setImageForCoin() -> UIImage {
+//        guard let symbol = self.coin?.symbol else {
+//            let image = UIImage(named: "BTC")
+//            return image
+//        }
+//        let image = UIImage(named: symbol)
+//        return image
+//    }
 }

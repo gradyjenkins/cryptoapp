@@ -40,37 +40,4 @@ struct Coin: Codable {
         case percentChange_7d = "percent_change_7d"
         case lastUpdated = "last_updated"
     }
-//    init(id: String, name: String, symbol: String, rank: Double, priceUSD: Double, priceBTC: Double, volumeUSD_24h: Double, marketCapUSD: Double, availableSupply: Double, totalSupply: Double, percentChange_1h: Double, percentChange_24h: Double, percentChange_7d: Double, lastUpdated: Double) {
-//        self.id = id
-//        self.name = name
-//        self.symbol = symbol
-//        self.rank = rank
-//        self.priceUSD = priceUSD
-//        self.priceBTC = priceBTC
-//        self.volumeUSD_24h = volumeUSD_24h
-//        self.marketCapUSD = marketCapUSD
-//        self.availableSupply = availableSupply
-//        self.totalSupply = totalSupply
-//        self.percentChange_1h = percentChange_1h
-//        self.percentChange_24h = percentChange_24h
-//        self.percentChange_7d = percentChange_7d
-//        self.lastUpdated = lastUpdated
-//    }
-//
-//    init(json: [String: Any]) {
-//        self.id = json["id"] as? String ?? ""
-//        self.name = json["name"] as? String ?? ""
-//        self.symbol = json["symbol"] as? String ?? ""
-//        self.rank = json["rank"] as? Double ?? -1
-//        self.priceUSD = json["price_usd"] as? Double ?? -1
-//        self.priceBTC = json["price_btc"] as? Double ?? -1
-//        self.volumeUSD_24h = json["24h_volume_usd"] as? Double ?? -1
-//        self.marketCapUSD = json["market_cap_usd"] as? Double ?? -1
-//        self.availableSupply = json["available_supply"] as? Double ?? -1
-//        self.totalSupply = json["total_supply"] as? Double ?? -1
-//        self.percentChange_1h = json["percent_change_1h"] as? Double ?? -1
-//        self.percentChange_24h = json["percent_change_24h"] as? Double ?? -1
-//        self.percentChange_7d = json["percent_change_7d"] as? Double ?? -1
-//        self.lastUpdated = json["last_updated"] as? Double ?? -1
-//    }
 }

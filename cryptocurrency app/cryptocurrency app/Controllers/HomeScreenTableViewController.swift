@@ -51,4 +51,13 @@ class HomeScreenTableViewController: UITableViewController {
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let favoriteAction = UIContextualAction(style: .normal, title: "Favorite") { (action, view, handler) in
+            
+        }
+        favoriteAction.backgroundColor = .green
+        let configuration = UISwipeActionsConfiguration(actions: [favoriteAction])
+        return configuration
+    }
 }
