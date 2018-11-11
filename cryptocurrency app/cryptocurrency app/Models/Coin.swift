@@ -24,6 +24,10 @@ struct Coin: Codable {
     var percentChange_7d: String
     var lastUpdated: String
     
+    var imageUrl: String {
+        return "https://s2.coinmarketcap.com/static/img/coins/32x32/\(id).png"
+    }
+    
     private enum CodingKeys: String, CodingKey {
         case id
         case name

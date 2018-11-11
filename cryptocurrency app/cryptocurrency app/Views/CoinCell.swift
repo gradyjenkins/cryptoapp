@@ -21,13 +21,20 @@ class CoinCell: UITableViewCell {
     
     var coin: Coin? {
         didSet {
-            guard let symbol = coin?.symbol, let name = coin?.name, let priceUSD = coin?.priceUSD else {
-                return
-            }
-            nameLabel.text = name
-            priceUsdLabel.text = priceUSD
-            symbolLabel.text = symbol
+            setupCoin()
         }
+    }
+    
+    func setupCoin(){
+        guard let symbol = coin?.symbol, let name = coin?.name, let priceUSD = coin?.priceUSD, let url = coin?.imageUrl else {
+            return
+        }
+        nameLabel.text = name
+        priceUsdLabel.text = priceUSD
+        symbolLabel.text = symbol
+        coinImage.loadImageFromUrlString(url: url, placeholder: ) { (result) in }
+        
+        
     }
     
     let symbolLabel: UILabel = {
@@ -64,7 +71,6 @@ class CoinCell: UITableViewCell {
     
     let coinImage: UIImageView = {
         let image = UIImageView()
-        
         image.translatesAutoresizingMaskIntoConstraints = true
         return image
     }()
@@ -78,7 +84,6 @@ class CoinCell: UITableViewCell {
         
         coinImage.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         coinImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
-        coinImage.image = UIImage(named: self.coin!.symbol)
         
         symbolLabel.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         symbolLabel.leadingAnchor.constraint(equalTo: coinImage.trailingAnchor, constant: 70).isActive = true
@@ -96,13 +101,4 @@ class CoinCell: UITableViewCell {
         priceUsdLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         priceUsdLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
-    
-//    func setImageForCoin() -> UIImage {
-//        guard let symbol = self.coin?.symbol else {
-//            let image = UIImage(named: "BTC")
-//            return image
-//        }
-//        let image = UIImage(named: symbol)
-//        return image
-//    }
 }
